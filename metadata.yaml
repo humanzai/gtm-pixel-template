@@ -12,8 +12,8 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-homepage: "https://www.humanz.com/"
-documentation: "https://www.humanz.com/for-ecommerce/"
+homepage: "https://www.humanz.com/for-ecommerce/"
+documentation: "https://github.com/humanzai/gtm-pixel-template"
 versions:
   - sha: c38c7ffe76cac6b626f802b3ea291a46160fb133
     changeNotes: Initial Version

@@ -15,5 +15,5 @@
 homepage: "https://www.humanz.com/"
 documentation: "https://www.humanz.com/for-ecommerce/"
 versions:
-  - sha: null
+  - sha: c38c7ffe76cac6b626f802b3ea291a46160fb133
     changeNotes: Initial Version

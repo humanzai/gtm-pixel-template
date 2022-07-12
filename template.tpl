@@ -62,7 +62,7 @@ const queryPermission = require('queryPermission');
 const copyFromDataLayer = require('copyFromDataLayer');
 
 // Pixel js file url. Change this only if you were told to do so by Humanz team
-const pixelURL = 'https://d2ztbiegtp19vn.cloudfront.net/main.js';
+const pixelURL = 'https://d2ztbiegtp19vn.cloudfront.net/gtm.js';
 
 // Pixel load on success
 const onSuccess = ()=>{

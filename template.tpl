@@ -326,7 +326,7 @@ ___WEB_PERMISSIONS___
             "listItem": [
               {
                 "type": 1,
-                "string": "https://d2ztbiegtp19vn.cloudfront.net/main.js"
+                "string": "https://d2ztbiegtp19vn.cloudfront.net/gtm.js"
               }
             ]
           }

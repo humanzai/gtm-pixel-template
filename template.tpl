@@ -1,12 +1,4 @@
-﻿___TERMS_OF_SERVICE___
-
-By creating or modifying this file you agree to Google Tag Manager's Community
-Template Gallery Developer Terms of Service available at
-https://developers.google.com/tag-manager/gallery-tos (or such other URL as
-Google may provide), as modified from time to time.
-
-
-___INFO___
+﻿___INFO___
 
 {
   "type": "TAG",
@@ -14,7 +6,11 @@ ___INFO___
   "version": 1,
   "securityGroups": [],
   "displayName": "Humanz pixel",
-  "categories": ["AFFILIATE_MARKETING", "ADVERTISING","CONVERSIONS"],
+  "categories": [
+    "AFFILIATE_MARKETING",
+    "ADVERTISING",
+    "CONVERSIONS"
+  ],
   "brand": {
     "id": "brand_dummy",
     "displayName": "",
@@ -38,7 +34,8 @@ ___TEMPLATE_PARAMETERS___
     "help": "This is your app ID that you\u0027ve got from Humanz",
     "notSetText": "If you don\u0027t know this field, please ask a Humanz agent to send it to you.",
     "alwaysInSummary": true,
-    "canBeEmptyString": false
+    "canBeEmptyString": false,
+    "defaultValue": -1
   }
 ]
 
@@ -62,7 +59,7 @@ const queryPermission = require('queryPermission');
 const copyFromDataLayer = require('copyFromDataLayer');
 
 // Pixel js file url. Change this only if you were told to do so by Humanz team
-const pixelURL = 'https://d2ztbiegtp19vn.cloudfront.net/gtm.js';
+const pixelURL = 'https://assets.humanz.com/'+data.appID+'/humanz-gtm.js';
 
 // Pixel load on success
 const onSuccess = ()=>{
@@ -326,7 +323,7 @@ ___WEB_PERMISSIONS___
             "listItem": [
               {
                 "type": 1,
-                "string": "https://d2ztbiegtp19vn.cloudfront.net/gtm.js"
+                "string": "https://assets.humanz.com/*"
               }
             ]
           }

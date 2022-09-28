@@ -15,5 +15,5 @@
 homepage: "https://www.humanz.com/for-ecommerce/"
 documentation: "https://github.com/humanzai/gtm-pixel-template"
 versions:
-  - sha: 7f3bc5333499bbfbc4010d3b567e34c30a2471c2
-    changeNotes: Initial Version
+  - sha: 22146f583019c5afe7335a96220b879e1836116f
+    changeNotes: Updated pixel base url

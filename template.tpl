@@ -87,18 +87,22 @@ const onSuccess = ()=>{
   if(ecommerce && ecommerce.purchase){
     let _purchase = ecommerce.purchase;
     log("Humanz pixel: ecommerce data layer", ecommerce);
-    let coupon='', products=[], ecv="Standard eCommerce";
-    // Detect enhenced structure
+    let coupon='', products=[],transaction_id=null,revenue=null, ecv="Standard eCommerce";
+    // Detect enhanced structure
     if(_purchase.actionField){
       coupon = _purchase.actionField.coupon;
       products = _purchase.actionField.products;
-      ecv = 'Enhenced eCommerce';
+      transaction_id = _purchase.actionField.id;
+      revenue = ecommerce.purchase.revenue;
+      ecv = 'Enhanced eCommerce';
     }else{
       coupon = _purchase.coupon;
       products = _purchase.items;
+      transaction_id = _purchase.transaction_id;
+      revenue = _purchase.value;
     }
-    callInWindow('hzp.gtmPurchase',products,coupon);
-    log("Humanz pixel: GTM Purchase event - ",ecv,products,coupon);
+    callInWindow('hzp.gtmPurchaseRevenue',products,coupon,transaction_id,revenue);
+    log("Humanz pixel: GTM Purchase event - ",ecv,products,coupon,transaction_id,revenue);
   }
 
   // Success callback

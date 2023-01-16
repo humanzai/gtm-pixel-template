@@ -44,6 +44,71 @@ ___TEMPLATE_PARAMETERS___
     "alwaysInSummary": true,
     "canBeEmptyString": false,
     "defaultValue": -1
+  },
+  {
+    "type": "CHECKBOX",
+    "name": "customVariables",
+    "checkboxText": "Custom variables object",
+    "simpleValueType": true,
+    "subParams": [
+      {
+        "type": "TEXT",
+        "name": "customTransaction",
+        "displayName": "Transaction ID / Order ID",
+        "simpleValueType": true,
+        "enablingConditions": [
+          {
+            "paramName": "customVariables",
+            "paramValue": true,
+            "type": "EQUALS"
+          }
+        ],
+        "valueHint": "i.e. my_object.order_id"
+      },
+      {
+        "type": "TEXT",
+        "name": "customProducts",
+        "displayName": "Products array",
+        "simpleValueType": true,
+        "enablingConditions": [
+          {
+            "paramName": "customVariables",
+            "paramValue": true,
+            "type": "EQUALS"
+          }
+        ],
+        "valueHint": "i.e. my_object.items"
+      },
+      {
+        "type": "TEXT",
+        "name": "customCoupon",
+        "displayName": "Coupon",
+        "simpleValueType": true,
+        "enablingConditions": [
+          {
+            "paramName": "customVariables",
+            "paramValue": true,
+            "type": "EQUALS"
+          }
+        ],
+        "valueHint": "i.e. my_object.discount_code"
+      },
+      {
+        "type": "TEXT",
+        "name": "customRevenue",
+        "displayName": "Revenue",
+        "simpleValueType": true,
+        "enablingConditions": [
+          {
+            "paramName": "customVariables",
+            "paramValue": true,
+            "type": "EQUALS"
+          }
+        ],
+        "valueHint": "i.e. my_object.total_value"
+      }
+    ],
+    "help": "If your purchase event object has a different structure than GTM\u0027s default - you can add your own paths to the variables. The event structure must be inside \"ecommerce\" or \"purchase\" object not included it in path. i.e. myObject.myValue will be converted to ecommerce.myObject.myValue"
   }
 ]
 
@@ -52,7 +117,7 @@ ___SANDBOXED_JS_FOR_WEB_TEMPLATE___
 
 /*************************************
         ===================
-        Humanz pixel V1.0.0
+        Humanz pixel V1.1.0
         ===================
         
     For information and support
@@ -65,9 +130,26 @@ const callInWindow = require('callInWindow');
 const injectScript = require('injectScript');
 const queryPermission = require('queryPermission');
 const copyFromDataLayer = require('copyFromDataLayer');
+const encodeUriComponent = require('encodeUriComponent');
 
 // Pixel js file url. Change this only if you were told to do so by Humanz team
-const pixelURL = 'https://assets.humanz.com/'+data.appID+'/humanz-gtm.js';
+const pixelURL = 'https://assets.humanz.com/'+encodeUriComponent(data.appID)+'/humanz-gtm.js';
+
+// Get a custom object value by it's path (i.e. purchase.myobject.coupon) and the dataLayer purchase event.
+const getCustomObjectValue = (customObject, purchaseEvent) => {
+  let res = null;
+  if(purchaseEvent && customObject && typeof customObject === 'string' && customObject.length){
+    let co = customObject.split('.');
+    for(let i=0; i<co.length; i++){
+      if(co[i] && purchaseEvent[co[i]]){
+        res = purchaseEvent[co[i]];
+      }else{
+        res = null;
+      }
+    }
+  }
+  return res;
+};
 
 // Pixel load on success
 const onSuccess = ()=>{
@@ -79,7 +161,7 @@ const onSuccess = ()=>{
   }
   
   // Init humanz pixel
-  log("Humanz pixel: initialized",data.appID);
+  log("Humanz pixel: initialized, GTM version 1.1.0, Humanz App ID:",data.appID);
   callInWindow('initHmz',data.appID);
   
   // Purchase event using ecommerce from data layer
@@ -88,21 +170,30 @@ const onSuccess = ()=>{
     let _purchase = ecommerce.purchase;
     log("Humanz pixel: ecommerce data layer", ecommerce);
     let coupon='', products=[],transaction_id=null,revenue=null, ecv="Standard eCommerce";
-    // Detect enhanced structure
-    if(_purchase.actionField){
+    
+    if(data.customVariables){
+      // Custom GTM variables
+      coupon = getCustomObjectValue(data.customCoupon, ecommerce);
+      products = getCustomObjectValue(data.customProducts, ecommerce);
+      transaction_id = getCustomObjectValue(data.customTransaction, ecommerce);
+      revenue = getCustomObjectValue(data.customRevenue, ecommerce);
+      ecv = 'Custom Variables';      
+    }else if(_purchase.actionField){
+      // Enhanced structure
       coupon = _purchase.actionField.coupon;
       products = _purchase.actionField.products;
       transaction_id = _purchase.actionField.id;
-      revenue = ecommerce.purchase.revenue;
+      revenue = _purchase.revenue;
       ecv = 'Enhanced eCommerce';
     }else{
+      // Deafult structure
       coupon = _purchase.coupon;
       products = _purchase.items;
       transaction_id = _purchase.transaction_id;
       revenue = _purchase.value;
     }
     callInWindow('hzp.gtmPurchaseRevenue',products,coupon,transaction_id,revenue);
-    log("Humanz pixel: GTM Purchase event - ",ecv,products,coupon,transaction_id,revenue);
+    log("Humanz pixel: GTM Purchase event - ",ecv,products,coupon,transaction_id,revenue,data);
   }
 
   // Success callback
